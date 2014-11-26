@@ -140,7 +140,6 @@ MOVE:
         packpos = 0;
     }
 
-
     return true;
 }
 
@@ -224,6 +223,8 @@ bool TcpSocket::push_buf(BufBlock_t* block) {
     }
 
     m_sendbufs.push_back(block);
+    m_reactor.handle_ctl(m_fd, EPOLL_CTL_MOD, EPOLLOUT|EPOLLIN|EPOLLET); 
+
     return true;
 }
 
@@ -238,6 +239,3 @@ void TcpSocket::check_timeout() {
         handle_error();
     }
 }
-
-
-

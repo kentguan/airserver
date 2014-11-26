@@ -22,7 +22,7 @@
 #define IP "10.1.1.182"
 #define TIMEOUT 0
 
-#define WORK_THREAD_NUM 10
+#define WORK_THREAD_NUM 1
 
 volatile bool stop = false;
 

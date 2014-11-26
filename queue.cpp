@@ -53,6 +53,7 @@ T Queue<T>::pop_queue() {
 
     int temp = m_front;
     m_front = (m_front+1)%m_size;
+    m_count--;
 
     return m_qlist[temp];
 }
