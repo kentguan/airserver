@@ -40,7 +40,7 @@ void BufPool::free(BufBlock_t* block) {
         m_singleton.m_head_pool.free(block);
     }
     else {
+        m_singleton.m_page_pool.ordered_free(block->page_base, block->page_num);
         m_singleton.m_head_pool.free(block);
-        m_singleton.m_page_pool.ordered_free(block, block->page_num);
     }
 }

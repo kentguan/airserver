@@ -55,7 +55,8 @@ int test_handle_process(const char* recv_buf, int recv_len, char** send_buf, int
 
     std::string send_body = "hello world";
 
-    ack_header->len = sizeof(*req_header) + sizeof(send_body.c_str());
+    ack_header->len = sizeof(*req_header) + strlen(send_body.c_str()) + 1;
+    memcpy(m_send_buf + sizeof(*req_header), send_body.c_str(),strlen(send_body.c_str())+1);
 
     *send_len = ack_header->len;
 
