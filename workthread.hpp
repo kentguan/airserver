@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include "global_data.hpp"
 
-#define CYCLE_WAIT_NANO_SEC 200000
+#define CYCLE_WAIT_NANO_SEC 2000000
 
 #define PUSH_ERRMSG(TYPE) \
     do { \
@@ -53,8 +53,14 @@ void* work_run(void* arg) {
         while (!stop) {
 
             if ((block=g_receive_queue.pop_queue()) == NULL) {
+
+#ifndef WORK_MODE
+                char pipe_buf[4096];
+                read(g_receive_queue.pipe_r_fd(), pipe_buf, sizeof(pipe_buf)); //阻塞避免忙等待
+#else
                 struct timespec tv = {0, CYCLE_WAIT_NANO_SEC};
                 nanosleep(&tv, NULL);
+#endif
                 continue;
             } else {
                 break;

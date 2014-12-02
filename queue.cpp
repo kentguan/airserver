@@ -1,6 +1,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include "queue.hpp"
 
 template <class T> 
@@ -15,6 +17,14 @@ Queue<T>::Queue(int size) {
     m_count = 0;
     m_size = size;
 
+    if (-1 == pipe(m_pipe)) {
+        close(m_pipe[0]);
+        close(m_pipe[1]);
+    }
+
+    int f = fcntl(m_pipe[1], F_GETFL, 0);
+    f |= O_NONBLOCK; 
+    fcntl(m_pipe[1], F_SETFL, f);
 }
 
 template <class T> 
@@ -29,6 +39,8 @@ Queue<T>::~Queue() {
     m_count = 0;
     m_size = 0;
 
+    close(m_pipe[0]);
+    close(m_pipe[1]);
 }
 
 template <class T> 
@@ -41,6 +53,10 @@ int Queue<T>::push_queue(const T& item) {
     m_qlist[m_rear] = item;
     m_rear = (m_rear + 1)%m_size;
     m_count++;
+
+#ifndef WORK_MODE
+    write(m_pipe[1], "r", 1);
+#endif
 
     return 0;
 }
