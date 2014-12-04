@@ -3,8 +3,10 @@ import struct
 
 HOST = '10.1.1.182'
 PORT = 4404
+#PORT = 13002
 
 NUM = 40
+#CNT = 20 
 CNT = 48000
 
 s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,9 +32,9 @@ for i in range(CNT):
     #print 'send_str:', len(send_str), send_str
 
     s.send(send_str)
-    data = s.recv(1024)
+    #data = s.recv(1024)
 
-    ##print 'length res:', len(data)
+    #print 'length res:', len(data)
     #length,seq,cmd,ret,uid = struct.unpack_from("iiiii", data)
 
     #body = data[20:len(data)]

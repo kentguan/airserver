@@ -60,16 +60,24 @@ bool TcpSocket::start(int fd, sockaddr_in &ip, sockaddr_in &local_ip, uint32_t c
 
 bool TcpSocket::handle_input() {
 
+    bool recv_again = false;
     int len = 0;
     uint32_t packpos = 0;
     int n;
 
     //边缘模式 要读完全部数据
 RECV:
-    n = recv(m_fd, m_recvbuf, m_recvbuf_size - m_recvpos, 0);
+    n = recv(m_fd, m_recvbuf + m_recvpos, m_recvbuf_size - m_recvpos, 0); 
     if (n > 0) {
         m_recvpos += n;
-        goto RECV;
+
+        recv_again = true;
+        //if (m_recvpos == m_recvbuf_size) { //要处理完读取的数据，再去度新数据
+            //recv_again = true;
+        //}
+        //else {
+            //goto RECV;
+        //}
     }
     else {
         if (n == 0) {
@@ -79,7 +87,7 @@ RECV:
             goto RECV;
         }
         else if (errno == EAGAIN) {//缓冲区数据读完 
-            goto READ;
+            return true;
         }
         else {
             return false;
@@ -101,6 +109,10 @@ READ:
         if (m_recvpos == m_recvbuf_size) { //包头长度过长
             return false;
         }
+
+        if (recv_again) {
+            goto RECV;
+        }
     }
     else {
         if (packpos == 0 && len >  m_recvbuf_size) { //包长度大于接受缓冲区
@@ -111,6 +123,10 @@ READ:
 
             m_recvbuf = tmp;
             m_recvbuf_size = len;
+
+            if (recv_again) {
+                goto RECV;
+            }
         }
 
         if (len + packpos <= m_recvpos) {//接受到一个完整的包
@@ -138,6 +154,10 @@ MOVE:
         memcpy(m_recvbuf, m_recvbuf+packpos, m_recvpos - packpos);
         m_recvpos -= packpos;
         packpos = 0;
+    }
+
+    if (recv_again) {
+        goto RECV;
     }
 
     return true;
