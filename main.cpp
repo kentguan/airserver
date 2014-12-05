@@ -14,7 +14,8 @@
 #include <sys/resource.h>
 
 #include "reactor.hpp"
-#include "buff.hpp"
+//#include "buff.hpp"
+#include "singleton_buff.hpp"
 #include "workthread.hpp"
 #include "tcpaccept.hpp"
 

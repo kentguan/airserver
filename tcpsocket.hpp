@@ -4,7 +4,8 @@
 #include <netinet/in.h>
 #include <boost/circular_buffer.hpp>
 #include "handler.hpp"
-#include "buff.hpp"
+//#include "buff.hpp"
+#include "singleton_buff.hpp"
 
 class Reactor;
 

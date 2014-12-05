@@ -15,7 +15,7 @@
             return ((void *)0);\
             HandlerBase* h = reactor->get_handler(new_block->buf_head.sk.socket); \
             if (NULL == h) { \
-                BufPool::free(new_block); \
+                free_block(new_block); \
                 continue; \
             }\
             while (!stop) { \
@@ -77,12 +77,14 @@ void* work_run(void* arg) {
 
         int ret_code = dll.handle_process((char*)block->page_base, block->buf_head.len, &send_data, &send_len, &(block->buf_head.sk));
 
-        new_block = BufPool::alloc(send_len);
+        //new_block = BufPool::alloc(send_len);
+        new_block = alloc_block(send_len);
         new_block->buf_head = block->buf_head;
         new_block->buf_head.len = send_len;
         memcpy(new_block->page_base, send_data, send_len);
 
-        BufPool::free(block);
+        //BufPool::free(block);
+        free_block(block);
 
         if (ret_code == -1) { //关闭链接
             PUSH_ERRMSG(FIN_BLOCK);
@@ -106,7 +108,9 @@ void* work_run(void* arg) {
 
             HandlerBase* h = reactor->get_handler(new_block->buf_head.sk.socket);
             if (NULL == h) {
-                BufPool::free(new_block);
+                //BufPool::free(new_block);
+                free_block(new_block);
+                g_send_lock.unlock();
                 continue;
             }
 

@@ -1,7 +1,8 @@
 #ifndef HANDLER_H
 #define HANDLER_H
 
-#include "buff.hpp"
+//#include "buff.hpp"
+#include "singleton_buff.hpp"
 
 class HandlerBase {
 public:

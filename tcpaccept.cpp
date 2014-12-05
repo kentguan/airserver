@@ -113,6 +113,7 @@ void TcpAccept::handle_error() {
 }
 
 bool TcpAccept::push_buf(BufBlock_t* block) {
-    BufPool::free(block);
+    //BufPool::free(block);
+    free_block(block);
     return true;
 }

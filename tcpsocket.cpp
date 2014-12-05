@@ -131,7 +131,8 @@ READ:
 
         if (len + packpos <= m_recvpos) {//接受到一个完整的包
             //加入接受队列中
-            BufBlock_t* new_buf = BufPool::alloc(len);
+            //BufBlock_t* new_buf = BufPool::alloc(len);
+            BufBlock_t* new_buf = alloc_block(len);
             memcpy(new_buf->page_base, m_recvbuf+packpos, len);
             new_buf->buf_head.id = m_id;
             new_buf->buf_head.buf_type = DATA_BLOCK;
@@ -177,7 +178,8 @@ bool TcpSocket::handle_output() {
         }
 
         if (!(block->buf_head.buf_type & DATA_BLOCK)) {
-            BufPool::free(block);
+            //BufPool::free(block);
+            free_block(block);
             m_sendbufs.pop_front();
             continue;
         }
@@ -193,7 +195,8 @@ bool TcpSocket::handle_output() {
                         return false;
                     }
 
-                    BufPool::free(block);
+                    //BufPool::free(block);
+                    free_block(block);
                     m_sendbufs.pop_front();
                     m_sendpos = 0;
                     break;
@@ -229,7 +232,8 @@ void TcpSocket::handle_error() {
 
     while (!m_sendbufs.empty()) {
         BufBlock_t* block = m_sendbufs.front();
-        BufPool::free(block);
+        //BufPool::free(block);
+        free_block(block);
         m_sendbufs.pop_front();
     }
 

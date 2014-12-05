@@ -7,7 +7,7 @@ PORT = 4404
 
 NUM = 40
 #CNT = 20 
-CNT = 5000
+CNT = 50000
 
 s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST,PORT))
@@ -32,7 +32,7 @@ for i in range(CNT):
     #print 'send_str:', len(send_str), send_str
 
     s.send(send_str)
-    #data = s.recv(1024)
+    data = s.recv(1024)
 
     #print 'length res:', len(data)
     #length,seq,cmd,ret,uid = struct.unpack_from("iiiii", data)
@@ -40,6 +40,6 @@ for i in range(CNT):
     #body = data[20:len(data)]
 
     #print body
-    print i
+    #print i
 
 s.close()
