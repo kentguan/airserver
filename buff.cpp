@@ -26,6 +26,7 @@ BufBlock_t* BufPool::alloc(uint32_t length) {
         block->page_base = (uint8_t*) m_singleton.m_page_pool.ordered_malloc(n);
         if (NULL == block->page_base) {
             m_singleton.m_head_pool.free(block);
+            return NULL;
         }
     }
 

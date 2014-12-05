@@ -7,7 +7,7 @@ PORT = 4404
 
 NUM = 40
 #CNT = 20 
-CNT = 48000
+CNT = 5000
 
 s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST,PORT))
@@ -40,6 +40,6 @@ for i in range(CNT):
     #body = data[20:len(data)]
 
     #print body
-    #print i
+    print i
 
 s.close()

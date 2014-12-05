@@ -7,7 +7,7 @@ CFLAGS = -ggdb -O2
 
 all: $(obj) $(deps)
 	g++ -o air_server $(obj) $(CFLAGS) $(LIBS) 
-	cp air_server ./sample/
+	cp air_server ./sample/ -f
 
 $(deps): %.d: %.cpp
 	rm -f $@
