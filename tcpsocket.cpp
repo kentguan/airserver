@@ -141,7 +141,14 @@ READ:
             new_buf->buf_head.sk = m_sk;
 
             //加入到接受队列中
-            g_receive_queue.push_queue(new_buf);
+            while (1) {
+                if (g_receive_queue.push_queue(new_buf) != 0) {
+                    usleep(1);
+                }
+                else {
+                    break;
+                }
+            }
 
             packpos += len;
             if (packpos < m_recvpos) {//还有一部分包 继续解析

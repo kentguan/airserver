@@ -85,15 +85,15 @@ void* work_run(void* arg) {
 
         //BufPool::free(block);
         free_block(block);
+        if (send_len != 0) {
+            free(send_data);
+        }
 
         if (ret_code == -1) { //关闭链接
             PUSH_ERRMSG(FIN_BLOCK);
         }
         else if (send_len == 0 || send_len > 8896) { //长度不对
             PUSH_ERRMSG(CLEAR_BLOCK);
-            if (send_len != 0) {
-                free(send_data);
-            }
         }
         else if (send_len > 0) {
             new_block->buf_head.buf_type = DATA_BLOCK;

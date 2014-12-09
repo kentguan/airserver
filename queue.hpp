@@ -1,7 +1,7 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
 
-const int nDefaultQueueSize = 500;
+const int nDefaultQueueSize = 5000000;
 
 template <class T> class Queue {
 public:
