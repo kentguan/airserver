@@ -146,6 +146,7 @@ READ:
                     usleep(1);
                 }
                 else {
+                    g_receive_sem.post();
                     break;
                 }
             }

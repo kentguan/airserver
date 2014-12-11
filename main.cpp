@@ -34,16 +34,14 @@ static int register_interface() {
     char *error;
     int ret_code = -1;
 
-//#define DLFUNC_NO_ERROR(h, v, name) do { \
-    //v = (typeof(v))dlsym(h, name); \
-    //if ((error = dlerror()) != NULL) { \
-        //dlclose(h); \
-        //h = NULL; \
-        //return ret_code; \
-    //} \
-//}while (0)
-
     dll.handle = dlopen("test.so", RTLD_NOW);
+    if ((error = dlerror()) != NULL) {
+        dlclose(dll.handle);
+        dll.handle = NULL;
+        return ret_code;
+    }
+
+    dll.handle_init = (typeof(dll.handle_init))dlsym(dll.handle, "handle_init");
     if ((error = dlerror()) != NULL) {
         dlclose(dll.handle);
         dll.handle = NULL;
@@ -59,18 +57,21 @@ static int register_interface() {
 
     dll.handle_process = (typeof(dll.handle_process))dlsym(dll.handle, "handle_process");
     if ((error = dlerror()) != NULL) {
+        dlclose(dll.handle);
+        dll.handle = NULL;
         return ret_code;
     }
 
-    //DLFUNC_NO_ERROR(dll.handle, dll.handle_input, "handle_input");
-    //DLFUNC_NO_ERROR(dll.handle, dll.handle_process, "handle_process");
+    dll.handle_fini = (typeof(dll.handle_fini))dlsym(dll.handle, "handle_fini");
+    if ((error = dlerror()) != NULL) {
+        dlclose(dll.handle);
+        dll.handle = NULL;
+        return ret_code;
+    }
 
     ret_code = 0;
     
     return ret_code;
-    
-    //dll.handle_input = test_handle_input;
-    //dll.handle_process = test_handle_process;
 }
 
 static void sigterm_handler(int signo) {
@@ -140,10 +141,17 @@ int main() {
         create_work_thread(&reactor, i);
     }
 
+    if (dll.handle_init) {
+        dll.handle_init();
+    }
+
     while (!stop) {
         reactor.handle_events(1000);
     }
 
+    if (dll.handle_fini) {
+        dll.handle_fini();
+    }
 
    return 0;
 }

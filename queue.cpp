@@ -55,7 +55,7 @@ int Queue<T>::push_queue(const T& item) {
     m_count++;
 
 #ifndef WORK_MODE
-    write(m_pipe[1], "r", 1);
+    //write(m_pipe[1], "r", 1);
 #endif
 
     return 0;

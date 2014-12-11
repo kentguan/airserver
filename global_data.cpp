@@ -8,4 +8,6 @@ Queue<BufBlock_t*> g_send_queue;     //发送队列
 MutexLock g_receive_lock;
 MutexLock g_send_lock;
 
+Sem g_receive_sem;
+
 dll_func_t dll;

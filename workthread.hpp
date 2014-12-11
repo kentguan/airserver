@@ -50,24 +50,31 @@ void* work_run(void* arg) {
         if (stop) {
             return ((void *)0);
         }
-        while (!stop) {
+        //while (!stop) {
 
-            if ((block=g_receive_queue.pop_queue()) == NULL) {
+            //if ((block=g_receive_queue.pop_queue()) == NULL) {
 
-#ifndef WORK_MODE
-                char pipe_buf[4096];
-                read(g_receive_queue.pipe_r_fd(), pipe_buf, sizeof(pipe_buf)); //阻塞避免忙等待
-#else
-                struct timespec tv = {0, CYCLE_WAIT_NANO_SEC};
-                nanosleep(&tv, NULL);
-#endif
-                continue;
-            } else {
-                break;
-            }
+//#ifndef WORK_MODE
+                //char pipe_buf[4096];
+                //read(g_receive_queue.pipe_r_fd(), pipe_buf, sizeof(pipe_buf)); //阻塞避免忙等待
+//#else
+                //struct timespec tv = {0, CYCLE_WAIT_NANO_SEC};
+                //nanosleep(&tv, NULL);
+//#endif
+                //continue;
+            //} else {
+                //break;
+            //}
+        //}
+
+        g_receive_sem.wait();
+        block=g_receive_queue.pop_queue();
+        g_receive_lock.unlock();
+
+        if (block == NULL) {
+            continue;
         }
 
-        g_receive_lock.unlock();
         if (stop) {
             return ((void *)0);
         }

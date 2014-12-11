@@ -18,8 +18,10 @@ struct Skinfo_t {
 
 typedef struct dll_func_struct {
     void  *handle;
+    int (*handle_init) ();
     int (*handle_input) (const char*, int, const Skinfo_t*);
     int (*handle_process) (const char*, int, char**, int*, const Skinfo_t*);
+    int (*handle_fini) ();
 } dll_func_t;
 
 

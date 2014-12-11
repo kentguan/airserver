@@ -1,5 +1,9 @@
 #include "test_interface.h"
 
+extern "C" int handle_init() {
+    return 0;
+}
+
 extern "C" int handle_input(const char* recv_buf, int recv_len, const Skinfo_t* skinfo) {
 
     if (recv_len < int(sizeof(header_t))) { //继续接受
@@ -47,5 +51,9 @@ extern "C" int handle_process(const char* recv_buf, int recv_len, char** send_bu
 
     *send_len = ack_header->len;
 
+    return 0;
+}
+
+extern "C" int handle_fini() {
     return 0;
 }
