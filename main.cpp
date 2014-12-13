@@ -21,11 +21,11 @@
 
 //#include "test_interface.hpp"
 
-#define PORT 4404
+#define PORT 15002
 #define IP "10.1.1.182"
 #define TIMEOUT 0
 
-#define WORK_THREAD_NUM 3
+#define WORK_THREAD_NUM 1
 
 volatile bool stop = false;
 
@@ -144,6 +144,7 @@ int main() {
     if (dll.handle_init) {
         dll.handle_init();
     }
+
 
     while (!stop) {
         reactor.handle_events(1000);

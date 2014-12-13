@@ -93,13 +93,13 @@ void* work_run(void* arg) {
         //BufPool::free(block);
         free_block(block);
         if (send_len != 0) {
-            free(send_data);
+            //free(send_data);
         }
 
         if (ret_code == -1) { //关闭链接
             PUSH_ERRMSG(FIN_BLOCK);
         }
-        else if (send_len == 0 || send_len > 8896) { //长度不对
+        else if (send_len == 0 || send_len > 8388608) { //长度不对
             PUSH_ERRMSG(CLEAR_BLOCK);
         }
         else if (send_len > 0) {
