@@ -12,14 +12,12 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/resource.h>
+#include<Python.h>
 
 #include "reactor.hpp"
-//#include "buff.hpp"
 #include "singleton_buff.hpp"
 #include "workthread.hpp"
 #include "tcpaccept.hpp"
-
-//#include "test_interface.hpp"
 
 #define PORT 15002
 #define IP "10.1.1.182"
@@ -29,12 +27,19 @@
 
 volatile bool stop = false;
 
-static int register_interface() {
+struct ServerConfig_t {
+    char* ip_str;
+    char* so_name;
+    int port;
+    int work_num;
+} g_server_conf;
+
+static int register_interface(char* so_name) {
 
     char *error;
     int ret_code = -1;
 
-    dll.handle = dlopen("test.so", RTLD_NOW);
+    dll.handle = dlopen(so_name, RTLD_NOW);
     if ((error = dlerror()) != NULL) {
         dlclose(dll.handle);
         dll.handle = NULL;
@@ -74,6 +79,44 @@ static int register_interface() {
     return ret_code;
 }
 
+static int load_conf_parameters(ServerConfig_t& server_conf) {
+    Py_Initialize();
+    if (!Py_IsInitialized()) {
+        return -1;
+    }
+
+    PyObject* pName = NULL;
+    PyObject* pModule = NULL;
+    PyObject* pFun = NULL;
+    PyObject* pReturn = NULL;
+
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString("sys.path.append('./')");
+
+    pName = PyString_FromString("conf");
+    pModule = PyImport_Import(pName);
+
+    if (!pModule) {
+        return -1;
+    }
+
+    pFun = PyObject_GetAttrString(pModule, "getConf");
+    pReturn = PyEval_CallObject(pFun, NULL);
+
+    char *port_str;
+    char *work_num_str;
+
+    PyArg_ParseTuple(pReturn, "siis", 
+            &(server_conf.ip_str), 
+            &(server_conf.port), 
+            &(server_conf.work_num), 
+            &(server_conf.so_name));
+
+    Py_Finalize();
+
+    return 0;
+}
+
 static void sigterm_handler(int signo) {
     stop = true;
 }
@@ -110,25 +153,30 @@ static void daemon_start()
 }
 
 
-int main() {
+int main(int argc, char* argv[]) {
 
     Reactor reactor;
     if (!reactor.init(20000)) {
         exit(-1);
     }
 
-    int ret = register_interface();
+    int ret = load_conf_parameters(g_server_conf);
+    if (ret != 0) {
+        return ret;
+    }
+
+    ret = register_interface(g_server_conf.so_name);
     if (ret != 0) {
         return ret;
     }
 
     daemon_start();
 
-    //创建套接字
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(PORT);
-    server_addr.sin_addr.s_addr = inet_addr(IP);
+    //server_addr.sin_port = htons(PORT);
+    server_addr.sin_port = htons(g_server_conf.port);
+    server_addr.sin_addr.s_addr = inet_addr(g_server_conf.ip_str);
 
     TcpAccept* ta = new TcpAccept(reactor);
     if (!ta->start(server_addr, TIMEOUT)) {

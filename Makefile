@@ -2,8 +2,8 @@ src = $(wildcard *.cpp)
 dir = $(notdir $(src))
 obj = $(patsubst %.cpp,%.o,$(dir))
 deps = $(patsubst %.cpp,%.d,$(dir))
-LIBS = -ldl -lpthread -lboost_system -ggdb -rdynamic
-CFLAGS = -ggdb -O2
+LIBS = -ldl -lpthread -lboost_system -ggdb -rdynamic -lpython2.5
+CFLAGS = -O2 -I/usr/include/python2.5
 
 all: $(obj) $(deps)
 	g++ -o air_server $(obj) $(CFLAGS) $(LIBS) 
@@ -16,7 +16,7 @@ $(deps): %.d: %.cpp
 sinclude $(deps)
 
 $(obj): %.o: %.cpp
-	g++ $< -c -o $@ -g
+	g++ $< -c -o $@ $(CFLAGS) -g
 
 clean:
 	-rm -rf *.d

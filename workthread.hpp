@@ -50,22 +50,6 @@ void* work_run(void* arg) {
         if (stop) {
             return ((void *)0);
         }
-        //while (!stop) {
-
-            //if ((block=g_receive_queue.pop_queue()) == NULL) {
-
-//#ifndef WORK_MODE
-                //char pipe_buf[4096];
-                //read(g_receive_queue.pipe_r_fd(), pipe_buf, sizeof(pipe_buf)); //阻塞避免忙等待
-//#else
-                //struct timespec tv = {0, CYCLE_WAIT_NANO_SEC};
-                //nanosleep(&tv, NULL);
-//#endif
-                //continue;
-            //} else {
-                //break;
-            //}
-        //}
 
         g_receive_sem.wait();
         block=g_receive_queue.pop_queue();
@@ -84,13 +68,11 @@ void* work_run(void* arg) {
 
         int ret_code = dll.handle_process((char*)block->page_base, block->buf_head.len, &send_data, &send_len, &(block->buf_head.sk));
 
-        //new_block = BufPool::alloc(send_len);
         new_block = alloc_block(send_len);
         new_block->buf_head = block->buf_head;
         new_block->buf_head.len = send_len;
         memcpy(new_block->page_base, send_data, send_len);
 
-        //BufPool::free(block);
         free_block(block);
         if (send_len != 0) {
             //free(send_data);
@@ -115,7 +97,6 @@ void* work_run(void* arg) {
 
             HandlerBase* h = reactor->get_handler(new_block->buf_head.sk.socket);
             if (NULL == h) {
-                //BufPool::free(new_block);
                 free_block(new_block);
                 g_send_lock.unlock();
                 continue;
