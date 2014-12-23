@@ -2,7 +2,7 @@ import socket
 import struct
 
 HOST = '10.1.1.182'
-PORT = 4404
+PORT = 4408
 #PORT = 13002
 
 NUM = 40

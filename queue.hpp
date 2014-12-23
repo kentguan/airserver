@@ -1,7 +1,8 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
 
-const int nDefaultQueueSize = 5000000;
+//const int nDefaultQueueSize = 1<<23;
+const int nDefaultQueueSize = 512;
 
 template <class T> class Queue {
 public:
@@ -21,7 +22,6 @@ private:
     T* m_qlist;
     int m_front;
     int m_rear;
-    int m_count;
     int m_size;
 
     int m_pipe[2];

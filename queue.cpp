@@ -14,7 +14,6 @@ Queue<T>::Queue(int size) {
 
     m_front = 0;
     m_rear = 0;
-    m_count = 0;
     m_size = size;
 
     if (-1 == pipe(m_pipe)) {
@@ -36,7 +35,6 @@ Queue<T>::~Queue() {
 
     m_front = 0;
     m_rear = 0;
-    m_count = 0;
     m_size = 0;
 
     close(m_pipe[0]);
@@ -51,8 +49,7 @@ int Queue<T>::push_queue(const T& item) {
     }
 
     m_qlist[m_rear] = item;
-    m_rear = (m_rear + 1)%m_size;
-    m_count++;
+    m_rear = (m_rear + 1)&(m_size-1);
 
 #ifndef WORK_MODE
     //write(m_pipe[1], "r", 1);
@@ -63,20 +60,19 @@ int Queue<T>::push_queue(const T& item) {
 
 template <class T> 
 T Queue<T>::pop_queue() {
-    if (0 == m_count) {
+    if (m_rear == m_front) {
         return NULL;
     }
 
-    int temp = m_front;
-    m_front = (m_front+1)%m_size;
-    m_count--;
+    T temp = m_qlist[m_front];
+    m_front = (m_front+1)&(m_size-1);
 
-    return m_qlist[temp];
+    return temp;
 }
 
 template <class T> 
 T Queue<T>::front() {
-    if (0 == m_count) {
+    if (m_rear == m_front) {
         return NULL;
     }
 
@@ -85,6 +81,6 @@ T Queue<T>::front() {
 
 template <class T> 
 int Queue<T>::size() {
-    return m_count;
+    return (m_rear-m_front+m_size)&(m_size-1);
 }
 

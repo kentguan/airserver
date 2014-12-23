@@ -75,7 +75,7 @@ void* work_run(void* arg) {
 
         free_block(block);
         if (send_len != 0) {
-            //free(send_data);
+            free(send_data);
         }
 
         if (ret_code == -1) { //关闭链接
