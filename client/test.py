@@ -32,14 +32,14 @@ for i in range(CNT):
     #print 'send_str:', len(send_str), send_str
 
     s.send(send_str)
-    data = s.recv(1024)
+    #data = s.recv(1024)
 
     #print 'length res:', len(data)
-    length,seq,cmd,ret,uid = struct.unpack_from("iiiii", data)
+    #length,seq,cmd,ret,uid = struct.unpack_from("iiiii", data)
 
-    body = data[20:len(data)]
+    #body = data[20:len(data)]
 
-    print body
+    #print body
     #print i
 
 s.close()

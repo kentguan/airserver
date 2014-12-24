@@ -102,14 +102,18 @@ void* work_run(void* arg) {
                 continue;
             }
 
-            while (1) {
+            //while (1) {
 
-                if (!h->push_buf(new_block)) {
-                    usleep(1000);
-                }
-                else {
-                    break;
-                }
+                //if (!h->push_buf(new_block)) {
+                    //usleep(1000);
+                //}
+                //else {
+                    //break;
+                //}
+            //}
+
+            if (!h->push_buf(new_block)) {
+                free_block(new_block);
             }
 
             g_send_lock.unlock();

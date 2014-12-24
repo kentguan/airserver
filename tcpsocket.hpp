@@ -2,10 +2,9 @@
 #define TCPSOCKET_HPP
 
 #include <netinet/in.h>
-#include <boost/circular_buffer.hpp>
 #include "handler.hpp"
-//#include "buff.hpp"
 #include "singleton_buff.hpp"
+#include "queue.hpp"
 
 class Reactor;
 
@@ -46,7 +45,7 @@ private:
     uint8_t* m_recvbuf;
     uint32_t m_recvbuf_size;
 
-    boost::circular_buffer<BufBlock_t*> m_sendbufs;
+    Queue<BufBlock_t*> m_sendbufs;  //接受队列
 };
 
 #endif

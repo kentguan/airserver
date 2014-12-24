@@ -174,7 +174,6 @@ int main(int argc, char* argv[]) {
 
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
-    //server_addr.sin_port = htons(PORT);
     server_addr.sin_port = htons(g_server_conf.port);
     server_addr.sin_addr.s_addr = inet_addr(g_server_conf.ip_str);
 
@@ -184,8 +183,8 @@ int main(int argc, char* argv[]) {
         exit(-1);
     }
 
-    tptr = (Thread*)calloc(WORK_THREAD_NUM, sizeof(Thread));
-    for (int i = 0; i < WORK_THREAD_NUM; i++) {
+    tptr = (Thread*)calloc(g_server_conf.work_num, sizeof(Thread));
+    for (int i = 0; i < g_server_conf.work_num; i++) {
         create_work_thread(&reactor, i);
     }
 

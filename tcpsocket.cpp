@@ -12,7 +12,7 @@
 
 //8192 socket 默认接受缓冲区大小 默认接受低水位1 发送高水位2048 
 TcpSocket::TcpSocket(Reactor &reactor)
- :m_reactor(reactor), m_fd(-1), m_sendbufs(1024), m_recvbuf_size(8192) {
+ :m_reactor(reactor), m_fd(-1), m_sendbufs(1<<20), m_recvbuf_size(8192) {
 
     m_recvpos = 0;
     m_sendpos = 0;
@@ -131,7 +131,6 @@ READ:
 
         if (len + packpos <= m_recvpos) {//接受到一个完整的包
             //加入接受队列中
-            //BufBlock_t* new_buf = BufPool::alloc(len);
             BufBlock_t* new_buf = alloc_block(len);
             memcpy(new_buf->page_base, m_recvbuf+packpos, len);
             new_buf->buf_head.id = m_id;
@@ -178,17 +177,15 @@ bool TcpSocket::handle_output() {
 
     int n;
 
-    while (!m_sendbufs.empty()) {
-        BufBlock_t* block = m_sendbufs.front();
+    BufBlock_t* block = NULL;
+    while ((block=m_sendbufs.pop_queue()) != NULL) {
 
         if (block->buf_head.buf_type == FIN_BLOCK) {
             return false;
         }
 
         if (!(block->buf_head.buf_type & DATA_BLOCK)) {
-            //BufPool::free(block);
             free_block(block);
-            m_sendbufs.pop_front();
             continue;
         }
 
@@ -203,9 +200,7 @@ bool TcpSocket::handle_output() {
                         return false;
                     }
 
-                    //BufPool::free(block);
                     free_block(block);
-                    m_sendbufs.pop_front();
                     m_sendpos = 0;
                     break;
                 }
@@ -238,11 +233,9 @@ void TcpSocket::handle_error() {
         m_fd = -1;
     }
 
-    while (!m_sendbufs.empty()) {
-        BufBlock_t* block = m_sendbufs.front();
-        //BufPool::free(block);
+    BufBlock_t* block = NULL;
+    while ((block = m_sendbufs.pop_queue())!= NULL) {
         free_block(block);
-        m_sendbufs.pop_front();
     }
 
     TcpSocketPool::remove(this);
@@ -250,11 +243,9 @@ void TcpSocket::handle_error() {
 
 bool TcpSocket::push_buf(BufBlock_t* block) {
 
-    if (m_sendbufs.full()) {
+    if (m_sendbufs.push_queue(block)) {
         return false;
     }
-
-    m_sendbufs.push_back(block);
     m_reactor.handle_ctl(m_fd, EPOLL_CTL_MOD, EPOLLOUT|EPOLLIN|EPOLLET); 
 
     return true;
