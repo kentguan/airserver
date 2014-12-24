@@ -1,5 +1,4 @@
 #include "global_data.hpp"
-//#include "buff.hpp"
 #include "singleton_buff.hpp"
 
 Queue<BufBlock_t*> g_receive_queue;  //接受队列
@@ -11,3 +10,5 @@ MutexLock g_send_lock;
 Sem g_receive_sem;
 
 dll_func_t dll;
+
+ServerConfig_t  g_server_conf;

@@ -18,5 +18,7 @@ extern Sem g_receive_sem;
 
 extern dll_func_t dll;
 
+extern ServerConfig_t  g_server_conf;
+
 
 #endif

@@ -5,8 +5,9 @@ def getConf():
     port = 4408
     work_num = 3
     so_name = "test.so"
+    need_free_send_buf = 1
 
-    print ip, port, work_num, so_name
-    return (ip,port,work_num,so_name)
+    print ip, port, work_num, so_name, need_free_send_buf
+    return (ip,port,work_num,so_name,need_free_send_buf)
 
 getConf()

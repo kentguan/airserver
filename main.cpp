@@ -27,12 +27,13 @@
 
 volatile bool stop = false;
 
-struct ServerConfig_t {
-    char* ip_str;
-    char* so_name;
-    int port;
-    int work_num;
-} g_server_conf;
+//struct ServerConfig_t {
+    //char* ip_str;
+    //char* so_name;
+    //int port;
+    //int work_num;
+    //int need_free_send_buf;
+//} g_server_conf;
 
 static int register_interface(char* so_name) {
 
@@ -89,6 +90,7 @@ static int load_conf_parameters(ServerConfig_t& server_conf) {
     PyObject* pModule = NULL;
     PyObject* pFun = NULL;
     PyObject* pReturn = NULL;
+    PyObject* pNeedFreeSendBuf = NULL;
 
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append('./')");
@@ -103,14 +105,13 @@ static int load_conf_parameters(ServerConfig_t& server_conf) {
     pFun = PyObject_GetAttrString(pModule, "getConf");
     pReturn = PyEval_CallObject(pFun, NULL);
 
-    char *port_str;
-    char *work_num_str;
 
-    PyArg_ParseTuple(pReturn, "siis", 
+    PyArg_ParseTuple(pReturn, "siisi", 
             &(server_conf.ip_str), 
             &(server_conf.port), 
             &(server_conf.work_num), 
-            &(server_conf.so_name));
+            &(server_conf.so_name),
+            &(server_conf.need_free_send_buf));
 
     Py_Finalize();
 

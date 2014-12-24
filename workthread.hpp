@@ -74,7 +74,7 @@ void* work_run(void* arg) {
         memcpy(new_block->page_base, send_data, send_len);
 
         free_block(block);
-        if (send_len != 0) {
+        if (send_len != 0 && g_server_conf.need_free_send_buf) {
             free(send_data);
         }
 

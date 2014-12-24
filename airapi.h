@@ -15,6 +15,13 @@ struct Skinfo_t {
     uint16_t remote_port;
 };
 
+struct ServerConfig_t {
+    char* ip_str;
+    char* so_name;
+    int port;
+    int work_num;
+    int need_free_send_buf;
+};
 
 typedef struct dll_func_struct {
     void  *handle;
