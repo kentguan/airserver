@@ -14,26 +14,17 @@
 #include <sys/resource.h>
 #include<Python.h>
 
+#include <log4cplus/logger.h>
+#include <log4cplus/fileappender.h>
+#include <log4cplus/layout.h>
+
 #include "reactor.hpp"
 #include "singleton_buff.hpp"
 #include "workthread.hpp"
 #include "tcpaccept.hpp"
 
-#define PORT 15002
-#define IP "10.1.1.182"
 #define TIMEOUT 0
-
-#define WORK_THREAD_NUM 1
-
 volatile bool stop = false;
-
-//struct ServerConfig_t {
-    //char* ip_str;
-    //char* so_name;
-    //int port;
-    //int work_num;
-    //int need_free_send_buf;
-//} g_server_conf;
 
 static int register_interface(char* so_name) {
 
@@ -115,6 +106,12 @@ static int load_conf_parameters(ServerConfig_t& server_conf) {
 
     Py_Finalize();
 
+    LOG4CPLUS_INFO(log4cplus::Logger::getRoot(), "load conf parameters ip:" <<server_conf.ip_str
+            <<" port:"<<server_conf.port
+            <<" work_num:"<<server_conf.work_num 
+            <<" so_name:"<<server_conf.so_name
+            <<" free_buf:"<<server_conf.need_free_send_buf);
+
     return 0;
 }
 
@@ -153,6 +150,17 @@ static void daemon_start()
     daemon(1, 1);
 }
 
+static void init_log() {
+    using namespace log4cplus;
+
+    SharedAppenderPtr append(new DailyRollingFileAppender("./log/air_server.log", DAILY));
+    append->setName("air_server"); 
+    append->setLayout(std::auto_ptr<Layout>(new TTCCLayout(false)));
+
+    Logger root = Logger::getRoot();
+    root.addAppender(append);
+}
+
 
 int main(int argc, char* argv[]) {
 
@@ -161,6 +169,7 @@ int main(int argc, char* argv[]) {
         exit(-1);
     }
 
+    init_log();
     int ret = load_conf_parameters(g_server_conf);
     if (ret != 0) {
         return ret;

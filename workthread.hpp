@@ -82,6 +82,7 @@ void* work_run(void* arg) {
             PUSH_ERRMSG(FIN_BLOCK);
         }
         else if (send_len == 0 || send_len > 8388608) { //长度不对
+            LOG4CPLUS_INFO(log4cplus::Logger::getRoot(), "socket fd="<<new_block->buf_head.sk.socket<<" send too large pkg");
             PUSH_ERRMSG(CLEAR_BLOCK);
         }
         else if (send_len > 0) {

@@ -6,6 +6,8 @@
 #include <sys/socket.h>
 #include <sys/epoll.h>
 
+#include <log4cplus/logger.h>
+
 #include "tcpaccept.hpp"
 #include "reactor.hpp"
 #include "tcpsocketpool.hpp"
@@ -82,6 +84,8 @@ bool TcpAccept::handle_input() {
                 TcpSocketPool::remove(ts);
                 continue;
             }
+
+            LOG4CPLUS_INFO(log4cplus::Logger::getRoot(), "accept a new socket fd="<<fd);
         } else {
 
             if (errno == EAGAIN || errno == EINTR || errno == EMFILE || errno == ENFILE) {

@@ -5,6 +5,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>                                                                                                          
 
+#include <log4cplus/logger.h>
+
 #include "tcpsocket.hpp"
 #include "reactor.hpp"
 #include "global_data.hpp"
@@ -140,14 +142,22 @@ READ:
             new_buf->buf_head.sk = m_sk;
 
             //加入到接受队列中
-            while (1) {
-                if (g_receive_queue.push_queue(new_buf) != 0) {
-                    usleep(1);
-                }
-                else {
-                    g_receive_sem.post();
-                    break;
-                }
+            //while (1) {
+                //if (g_receive_queue.push_queue(new_buf) != 0) {
+                    //usleep(1);
+                //}
+                //else {
+                    //g_receive_sem.post();
+                    //break;
+                //}
+            //}
+
+            if (g_receive_queue.push_queue(new_buf) != 0) {
+                LOG4CPLUS_INFO(log4cplus::Logger::getRoot(), "receive queue is full");
+                free_block(new_buf);
+            }
+            else {
+                g_receive_sem.post();
             }
 
             packpos += len;
@@ -230,6 +240,7 @@ void TcpSocket::handle_error() {
         m_reactor.set_handler(m_fd, NULL);
         m_reactor.handle_ctl(m_fd, EPOLL_CTL_DEL, 0);
         close(m_fd);
+        LOG4CPLUS_INFO(log4cplus::Logger::getRoot(), "socket fd="<<m_fd<<" closed by client");
         m_fd = -1;
     }
 
@@ -244,6 +255,8 @@ void TcpSocket::handle_error() {
 bool TcpSocket::push_buf(BufBlock_t* block) {
 
     if (m_sendbufs.push_queue(block)) {
+
+        LOG4CPLUS_INFO(log4cplus::Logger::getRoot(), "socket fd="<<m_fd<<" send queue is full");
         return false;
     }
     m_reactor.handle_ctl(m_fd, EPOLL_CTL_MOD, EPOLLOUT|EPOLLIN|EPOLLET); 
