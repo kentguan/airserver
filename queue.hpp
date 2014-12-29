@@ -15,16 +15,11 @@ public:
     T front();
     int size();
 
-    inline int pipe_r_fd() { return m_pipe[0]; }
-    inline int pipe_s_fd() { return m_pipe[1]; }
-
 private:
     T* m_qlist;
     int m_front;
     int m_rear;
     int m_size;
-
-    int m_pipe[2];
 };
 
 #endif

@@ -153,7 +153,8 @@ static void daemon_start()
 static void init_log() {
     using namespace log4cplus;
 
-    SharedAppenderPtr append(new DailyRollingFileAppender("./log/air_server.log", DAILY));
+    //SharedAppenderPtr append(new DailyRollingFileAppender("air_server.log", DAILY, true, 5));
+    SharedAppenderPtr append(new FileAppender("air_server.log"));
     append->setName("air_server"); 
     append->setLayout(std::auto_ptr<Layout>(new TTCCLayout(false)));
 
@@ -161,6 +162,13 @@ static void init_log() {
     root.addAppender(append);
 }
 
+static void show_banner()
+{                   
+   printf("AirServer%s, report bugs to <changguan350@gmail.com>\n", "1.0");
+   printf("Compiled at %s %s\n", __DATE__, __TIME__);
+   printf("listen ip:%s port:%d\n", g_server_conf.ip_str, g_server_conf.port);
+   printf("work_num: %d\n", g_server_conf.work_num);
+}
 
 int main(int argc, char* argv[]) {
 
@@ -181,6 +189,7 @@ int main(int argc, char* argv[]) {
     }
 
     daemon_start();
+    show_banner();
 
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;

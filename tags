@@ -19,13 +19,11 @@ FIN_BLOCK	singleton_buff.hpp	14;"	d
 GLOBAL_DATA_HPP	global_data.hpp	2;"	d
 HANDLER_H	handler.hpp	2;"	d
 HandlerBase	handler.hpp	/^class HandlerBase {$/;"	c
-IP	main.cpp	23;"	d	file:
 LIBS	Makefile	/^LIBS = -ldl -lpthread -lboost_system -ggdb -rdynamic -lpython2.5$/;"	m
 LOCK_HPP	lock.hpp	2;"	d
 MutexLock	lock.cpp	/^MutexLock::MutexLock() {$/;"	f	class:MutexLock
 MutexLock	lock.hpp	/^class MutexLock {$/;"	c
 PAGE_SIZE	singleton_buff.hpp	10;"	d
-PORT	main.cpp	22;"	d	file:
 PUSH_ERRMSG	workthread.hpp	9;"	d
 Page_t	singleton_buff.hpp	/^struct Page_t {$/;"	s
 QUEUE_HPP	queue.hpp	2;"	d
@@ -36,16 +34,17 @@ Reactor	reactor.cpp	/^Reactor::Reactor() {$/;"	f	class:Reactor
 Reactor	reactor.hpp	/^class Reactor$/;"	c
 SEM_HPP	sem.hpp	2;"	d
 SINGLETON_BUFF_HPP	singleton_buff.hpp	2;"	d
+STATIC_LIB	Makefile	/^STATIC_LIB = \/usr\/local\/lib\/liblog4cplus.a$/;"	m
 Sem	sem.cpp	/^Sem::Sem() {$/;"	f	class:Sem
 Sem	sem.hpp	/^class Sem {$/;"	c
-ServerConfig_t	main.cpp	/^struct ServerConfig_t {$/;"	s	file:
+ServerConfig_t	airapi.h	/^struct ServerConfig_t {$/;"	s
 Skinfo_t	airapi.h	/^struct Skinfo_t {$/;"	s
 Skinfo_t	sample/airapi.h	/^struct Skinfo_t {$/;"	s
 TCPACCEPT_HPP	tcpaccept.hpp	2;"	d
 TCPSOCKETPOOL_HPP	tcpsocketpool.hpp	2;"	d
 TCPSOCKET_HPP	tcpsocket.hpp	2;"	d
 TEST_INTERFACE	sample/test_interface.h	2;"	d
-TIMEOUT	main.cpp	24;"	d	file:
+TIMEOUT	main.cpp	26;"	d	file:
 TcpAccept	tcpaccept.cpp	/^TcpAccept::TcpAccept(Reactor &reactor)$/;"	f	class:TcpAccept
 TcpAccept	tcpaccept.hpp	/^class TcpAccept : public HandlerBase {$/;"	c
 TcpSocket	tcpsocket.cpp	/^TcpSocket::TcpSocket(Reactor &reactor)$/;"	f	class:TcpSocket
@@ -54,7 +53,6 @@ TcpSocketPool	tcpsocketpool.cpp	/^TcpSocketPool::TcpSocketPool(){$/;"	f	class:Tc
 TcpSocketPool	tcpsocketpool.hpp	/^class TcpSocketPool {$/;"	c
 Thread	workthread.hpp	/^} Thread;$/;"	t	typeref:struct:__anon1
 WORK_THREAD_HPP	workthread.hpp	2;"	d
-WORK_THREAD_NUM	main.cpp	26;"	d	file:
 addfd	client/stress_test.cpp	/^void addfd(int epoll_fd, int fd) {$/;"	f
 alloc_block	singleton_buff.cpp	/^BufBlock_t* alloc_block(uint32_t length) {$/;"	f
 buf_head	singleton_buff.hpp	/^    BufHead_t buf_head;$/;"	m	struct:BufBlock_t
@@ -82,7 +80,7 @@ g_receive_queue	global_data.cpp	/^Queue<BufBlock_t*> g_receive_queue;  \/\/接�
 g_receive_sem	global_data.cpp	/^Sem g_receive_sem;$/;"	v
 g_send_lock	global_data.cpp	/^MutexLock g_send_lock;$/;"	v
 g_send_queue	global_data.cpp	/^Queue<BufBlock_t*> g_send_queue;     \/\/发送队列$/;"	v
-g_server_conf	main.cpp	/^} g_server_conf;$/;"	v	typeref:struct:ServerConfig_t
+g_server_conf	global_data.cpp	/^ServerConfig_t  g_server_conf;$/;"	v
 getConf	sample/conf.py	/^def getConf():$/;"	f
 get_curtime	reactor.hpp	/^    inline time_t get_curtime() {return m_curtime;}$/;"	f	class:Reactor
 get_handler	reactor.cpp	/^HandlerBase* Reactor::get_handler(int fd) {$/;"	f	class:Reactor
@@ -111,7 +109,8 @@ header_t	client/stress_test.cpp	/^struct header_t {$/;"	s	file:
 header_t	sample/test_interface.h	/^struct header_t {$/;"	s
 id	singleton_buff.hpp	/^    int id;$/;"	m	struct:BufHead_t
 init	reactor.cpp	/^bool Reactor::init(int size) {$/;"	f	class:Reactor
-ip_str	main.cpp	/^    char* ip_str;$/;"	m	struct:ServerConfig_t	file:
+init_log	main.cpp	/^static void init_log() {$/;"	f	file:
+ip_str	airapi.h	/^    char* ip_str;$/;"	m	struct:ServerConfig_t
 key	singleton_buff.hpp	/^    uint32_t key;$/;"	m	struct:BufHead_t
 len	client/stress_test.cpp	/^    uint32_t len;$/;"	m	struct:header_t	file:
 len	sample/test_interface.h	/^    uint32_t len;$/;"	m	struct:header_t
@@ -140,7 +139,6 @@ m_last_time	tcpsocket.hpp	/^    uint32_t m_last_time;$/;"	m	class:TcpSocket
 m_local_ip	tcpsocket.hpp	/^    sockaddr_in m_local_ip;$/;"	m	class:TcpSocket
 m_mutex_lock	lock.hpp	/^    pthread_mutex_t m_mutex_lock;$/;"	m	class:MutexLock
 m_oldtime	reactor.hpp	/^    time_t m_oldtime;$/;"	m	class:Reactor
-m_pipe	queue.hpp	/^    int m_pipe[2];$/;"	m	class:Queue
 m_qlist	queue.hpp	/^    T* m_qlist;$/;"	m	class:Queue
 m_reactor	tcpaccept.hpp	/^    Reactor& m_reactor;$/;"	m	class:TcpAccept
 m_reactor	tcpsocket.hpp	/^    Reactor& m_reactor;$/;"	m	class:TcpSocket
@@ -149,7 +147,7 @@ m_recvbuf	tcpsocket.hpp	/^    uint8_t* m_recvbuf;$/;"	m	class:TcpSocket
 m_recvbuf_size	tcpsocket.hpp	/^    uint32_t m_recvbuf_size;$/;"	m	class:TcpSocket
 m_recvpos	tcpsocket.hpp	/^    uint32_t m_recvpos;$/;"	m	class:TcpSocket
 m_sem	sem.hpp	/^    sem_t m_sem;$/;"	m	class:Sem
-m_sendbufs	tcpsocket.hpp	/^    boost::circular_buffer<BufBlock_t*> m_sendbufs;$/;"	m	class:TcpSocket
+m_sendbufs	tcpsocket.hpp	/^    Queue<BufBlock_t*> m_sendbufs;  \/\/接受队列$/;"	m	class:TcpSocket
 m_sendpos	tcpsocket.hpp	/^    uint32_t m_sendpos;$/;"	m	class:TcpSocket
 m_singleton	tcpsocketpool.cpp	/^TcpSocketPool TcpSocketPool::m_singleton;$/;"	m	class:TcpSocketPool	file:
 m_singleton	tcpsocketpool.hpp	/^    static TcpSocketPool m_singleton;$/;"	m	class:TcpSocketPool
@@ -161,14 +159,13 @@ m_timeout	tcpaccept.hpp	/^    uint32_t m_timeout;$/;"	m	class:TcpAccept
 main	client/stress_test.cpp	/^int main (int argc, char* argv[]) {$/;"	f
 main	main.cpp	/^int main(int argc, char* argv[]) {$/;"	f
 make_id	reactor.hpp	/^    inline int make_id() {return m_id++;}$/;"	f	class:Reactor
-nDefaultQueueSize	queue.hpp	/^const int nDefaultQueueSize = 512;$/;"	v
+nDefaultQueueSize	queue.hpp	/^const int nDefaultQueueSize = 1<<23;$/;"	v
+need_free_send_buf	airapi.h	/^    int need_free_send_buf;$/;"	m	struct:ServerConfig_t
 obj	Makefile	/^obj = $(patsubst %.cpp,%.o,$(dir))$/;"	m
 page_base	singleton_buff.hpp	/^    uint8_t *page_base;$/;"	m	struct:BufBlock_t
 page_num	singleton_buff.hpp	/^    uint32_t page_num;$/;"	m	struct:BufBlock_t
-pipe_r_fd	queue.hpp	/^    inline int pipe_r_fd() { return m_pipe[0]; }$/;"	f	class:Queue
-pipe_s_fd	queue.hpp	/^    inline int pipe_s_fd() { return m_pipe[1]; }$/;"	f	class:Queue
 pop_queue	queue.cpp	/^T Queue<T>::pop_queue() {$/;"	f	class:Queue
-port	main.cpp	/^    int port;$/;"	m	struct:ServerConfig_t	file:
+port	airapi.h	/^    int port;$/;"	m	struct:ServerConfig_t
 post	sem.cpp	/^void Sem::post() {$/;"	f	class:Sem
 push_buf	tcpaccept.cpp	/^bool TcpAccept::push_buf(BufBlock_t* block) {$/;"	f	class:TcpAccept
 push_buf	tcpsocket.cpp	/^bool TcpSocket::push_buf(BufBlock_t* block) {$/;"	f	class:TcpSocket
@@ -191,10 +188,11 @@ seq	client/stress_test.cpp	/^    uint32_t seq;                                  
 seq	sample/test_interface.h	/^    uint32_t seq;$/;"	m	struct:header_t
 set_handler	reactor.cpp	/^bool Reactor::set_handler(int fd, HandlerBase* handler) {$/;"	f	class:Reactor
 setnonblocking	client/stress_test.cpp	/^int setnonblocking(int fd) {$/;"	f
+show_banner	main.cpp	/^static void show_banner()$/;"	f	file:
 sigterm_handler	main.cpp	/^static void sigterm_handler(int signo) {$/;"	f	file:
 size	queue.cpp	/^int Queue<T>::size() {$/;"	f	class:Queue
 sk	singleton_buff.hpp	/^    Skinfo_t sk;$/;"	m	struct:BufHead_t
-so_name	main.cpp	/^    char* so_name;$/;"	m	struct:ServerConfig_t	file:
+so_name	airapi.h	/^    char* so_name;$/;"	m	struct:ServerConfig_t
 socket	airapi.h	/^    int socket;$/;"	m	struct:Skinfo_t
 socket	sample/airapi.h	/^    int socket;$/;"	m	struct:Skinfo_t
 src	Makefile	/^src = $(wildcard *.cpp)$/;"	m
@@ -208,7 +206,7 @@ uid	client/stress_test.cpp	/^    uint32_t uid;$/;"	m	struct:header_t	file:
 uid	sample/test_interface.h	/^    uint32_t uid;$/;"	m	struct:header_t
 unlock	lock.cpp	/^void MutexLock::unlock() {$/;"	f	class:MutexLock
 wait	sem.cpp	/^void Sem::wait() {$/;"	f	class:Sem
-work_num	main.cpp	/^    int work_num;$/;"	m	struct:ServerConfig_t	file:
+work_num	airapi.h	/^    int work_num;$/;"	m	struct:ServerConfig_t
 work_run	workthread.hpp	/^void* work_run(void* arg) {$/;"	f
 write_nbytes	client/stress_test.cpp	/^bool write_nbytes(int sockfd, const char* buffer, int len) {$/;"	f
 ~HandlerBase	handler.hpp	/^    virtual ~HandlerBase() {}$/;"	f	class:HandlerBase
